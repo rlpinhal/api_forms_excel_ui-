@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Store | Configuração de Sistema</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .neon-border { border: 1px solid #38bdf8; box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
+        .neon-button { background: linear-gradient(90deg, #0ea5e9, #2563eb); transition: all 0.3s ease; }
+        .neon-button:hover { box-shadow: 0 0 20px rgba(37, 99, 235, 0.5); transform: translateY(-1px); }
+        input, select, textarea { background: #1e293b !important; border: 1px solid #334155 !important; color: #f8fafc !important; }
+        input:focus { border-color: #38bdf8 !important; outline: none; box-shadow: 0 0 5px rgba(56, 189, 248, 0.5); }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+
+    <div class="max-w-2xl w-full bg-slate-900 rounded-xl p-8 neon-border relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-4 opacity-10">
+            <svg width="100" height="100" viewBox="0 0 24 24" fill="currentColor"><path d="M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5Z"/></svg>
+        </div>
+
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl font-bold text-sky-400 mono tracking-tighter uppercase">Laboratório de Performance</h1>
+            <p class="text-slate-400 text-sm mt-2">Módulo de Cadastro de Componentes e Experiência</p>
+        </header>
+
+        <form action="https://docs.google.com/forms/d/e/1FAIpQLSdrzWjYDmWl3fAK7mcMr4Ni_9ol9hv5Ve5mKEyG8rZiyLIY9Q/formResponse" method="POST" target="_self" id="tech-form">
+            
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest text-sky-500 mb-2 mono">Operador do Sistema (Nome)</label>
+                    <input type="text" name="entry.1687628342" placeholder="Ex: Master_Dev_2026" required
+                        class="w-full p-3 rounded-lg transition-all">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest text-sky-500 mb-2 mono">Prioridade de Processamento (Valor)</label>
+                    <input type="number" name="entry.440788284" placeholder="0" required
+                        class="w-full p-3 rounded-lg transition-all">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest text-sky-500 mb-2 mono">Logs de Experiência / Descrição</label>
+                    <textarea name="entry.58888179" rows="3" placeholder="Descreva as especificações do hardware..." required
+                        class="w-full p-3 rounded-lg transition-all"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest text-sky-500 mb-2 mono">Ativar Overclock? (Sim/Não)</label>
+                    <select name="entry.1007921080" required class="w-full p-3 rounded-lg transition-all cursor-pointer">
+                        <option value="Sim">Sim - Performance Máxima</option>
+                        <option value="Não">Não - Modo Econômico</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-10">
+                <button type="submit" class="w-full p-4 rounded-lg neon-button text-white font-bold uppercase tracking-widest mono">
+                    Compilar e Transmitir Dados
+                </button>
+                <p class="text-[10px] text-center text-slate-500 mt-4 uppercase mono">Conexão segura estabelecida via protocolo HTTP/POST</p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Pequeno script para feedback visual ao enviar
+        document.getElementById('tech-form').onsubmit = function() {
+            const btn = this.querySelector('button');
+            btn.innerHTML = "Transmitindo...";
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+        };
+    </script>
+</body>
+</html>
