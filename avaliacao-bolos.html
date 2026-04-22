@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doce Avaliação — La Patisserie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #FAF6EF;
+    --warm-white: #FDF9F4;
+    --caramel: #C8843A;
+    --caramel-light: #E8C490;
+    --caramel-dark: #8B5A1F;
+    --chocolate: #3D2010;
+    --chocolate-mid: #6B3A1F;
+    --blush: #F2D9CB;
+    --blush-deep: #D4956A;
+    --muted: #9A8070;
+    --border: rgba(200, 132, 58, 0.2);
+    --shadow: rgba(61, 32, 16, 0.08);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--chocolate);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1rem 4rem;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    width: 100%;
+    max-width: 640px;
+    text-align: center;
+    padding: 3.5rem 1rem 2rem;
+    position: relative;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--caramel);
+    background: var(--blush);
+    border: 1px solid var(--caramel-light);
+    border-radius: 20px;
+    padding: 5px 14px;
+    margin-bottom: 1.5rem;
+  }
+  .hero-badge svg { width: 12px; height: 12px; }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 600;
+    color: var(--chocolate);
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--caramel);
+  }
+  .hero p {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 400px;
+    margin: 0 auto 2rem;
+  }
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0 auto 2.5rem;
+    max-width: 200px;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--caramel-light);
+  }
+  .divider-icon { font-size: 16px; }
+
+  /* ─── FORM CARD ─── */
+  .form-card {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 640px;
+    box-shadow: 0 8px 40px var(--shadow), 0 2px 8px rgba(200, 132, 58, 0.06);
+    position: relative;
+    overflow: hidden;
+  }
+  .form-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--caramel-dark), var(--caramel), var(--blush-deep));
+  }
+
+  /* ─── STEP PROGRESS ─── */
+  .progress-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 2.5rem;
+  }
+  .progress-dot {
+    flex: 1;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--blush);
+    transition: background 0.4s ease;
+  }
+  .progress-dot.active { background: var(--caramel); }
+  .progress-dot.done { background: var(--caramel-dark); }
+
+  /* ─── STEPS ─── */
+  .step { display: none; animation: fadeIn 0.35s ease; }
+  .step.visible { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .step-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--caramel);
+    margin-bottom: 0.5rem;
+  }
+  .step-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--chocolate);
+    margin-bottom: 0.4rem;
+  }
+  .step-subtitle {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  /* ─── INPUTS ─── */
+  .field { margin-bottom: 1.5rem; }
+  label.field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--chocolate-mid);
+    margin-bottom: 8px;
+    letter-spacing: 0.01em;
+  }
+  label.field-label span {
+    color: var(--caramel);
+    margin-left: 2px;
+  }
+
+  input[type="text"], textarea {
+    width: 100%;
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 13px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--chocolate);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: none;
+  }
+  input[type="text"]::placeholder, textarea::placeholder { color: var(--muted); opacity: 0.7; }
+  input[type="text"]:focus, textarea:focus {
+    border-color: var(--caramel);
+    box-shadow: 0 0 0 3px rgba(200, 132, 58, 0.12);
+  }
+
+  /* ─── STAR RATING ─── */
+  .stars-container {
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .stars-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .star-btn {
+    background: none;
+    border: 2px solid var(--caramel-light);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--caramel-light);
+    position: relative;
+  }
+  .star-btn:hover, .star-btn.selected {
+    background: var(--caramel);
+    border-color: var(--caramel);
+    color: white;
+    transform: scale(1.12);
+  }
+  .star-btn.selected { box-shadow: 0 4px 12px rgba(200, 132, 58, 0.35); }
+  .score-display {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--caramel);
+    line-height: 1;
+  }
+  .score-label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* ─── RADIO OPTIONS ─── */
+  .radio-group { display: flex; flex-direction: column; gap: 10px; }
+  .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+  .radio-option:hover {
+    border-color: var(--caramel-light);
+    background: var(--blush);
+  }
+  .radio-option.selected {
+    border-color: var(--caramel);
+    background: linear-gradient(135deg, var(--blush), #FFF5EC);
+    box-shadow: 0 2px 12px rgba(200, 132, 58, 0.15);
+  }
+  .radio-option input[type="radio"] { display: none; }
+  .radio-dot {
+    width: 20px; height: 20px;
+    border: 2px solid var(--caramel-light);
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .radio-option.selected .radio-dot {
+    border-color: var(--caramel);
+    background: var(--caramel);
+  }
+  .radio-option.selected .radio-dot::after {
+    content: '';
+    width: 8px; height: 8px;
+    background: white;
+    border-radius: 50%;
+  }
+  .radio-icon { font-size: 18px; }
+  .radio-text {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--chocolate-mid);
+  }
+  .radio-option.selected .radio-text { color: var(--chocolate); font-weight: 500; }
+
+  /* ─── BUTTONS ─── */
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 2rem;
+    align-items: center;
+  }
+  .btn-back {
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .btn-back:hover { border-color: var(--caramel-light); color: var(--caramel); }
+  .btn-next {
+    flex: 1;
+    background: var(--caramel);
+    border: none;
+    border-radius: 12px;
+    padding: 14px 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    letter-spacing: 0.01em;
+  }
+  .btn-next:hover {
+    background: var(--caramel-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(200, 132, 58, 0.3);
+  }
+  .btn-next:active { transform: translateY(0); }
+  .btn-next:disabled { background: var(--caramel-light); cursor: not-allowed; transform: none; box-shadow: none; }
+
+  /* ─── SUCCESS ─── */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 1rem 0 0.5rem;
+    animation: fadeIn 0.5s ease;
+  }
+  .success-screen.visible { display: block; }
+  .success-icon {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, var(--caramel-light), var(--caramel));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 8px 24px rgba(200, 132, 58, 0.3);
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .success-screen h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--chocolate);
+    margin-bottom: 0.75rem;
+  }
+  .success-screen p {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 380px;
+    margin: 0 auto 2rem;
+  }
+  .confetti-row {
+    display: flex; justify-content: center; gap: 8px;
+    font-size: 22px; margin-bottom: 0.5rem;
+  }
+  .submitted-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #EAF6EC;
+    color: #2D7A3A;
+    border: 1px solid #A8D9AF;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    opacity: 0.7;
+  }
+  .footer a { color: var(--caramel); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  /* ─── REQUIRED NOTE ─── */
+  .req-note {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .req-note span { color: var(--caramel); }
+
+  @media (max-width: 480px) {
+    .form-card { padding: 1.75rem 1.25rem; }
+    .stars-row { gap: 4px; }
+    .star-btn { width: 38px; height: 38px; font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-badge">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+    Avaliação de Produto
+  </div>
+  <h1>Sua opinião faz nossa<br><em>receita ainda mais doce</em></h1>
+  <p>Conte-nos sobre sua experiência com nossos bolos. Cada resposta ajuda a tornar cada fatia ainda mais especial.</p>
+  <div class="divider">
+    <span class="divider-icon">🎂</span>
+  </div>
+</header>
+
+<!-- FORM CARD -->
+<main class="form-card" id="formCard">
+
+  <!-- Progress -->
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-dot active" id="dot0"></div>
+    <div class="progress-dot" id="dot1"></div>
+    <div class="progress-dot" id="dot2"></div>
+    <div class="progress-dot" id="dot3"></div>
+  </div>
+
+  <!-- ── STEP 1: Nome ── -->
+  <div class="step visible" id="step0">
+    <p class="step-label">Etapa 1 de 4</p>
+    <h2 class="step-title">Como você se chama?</h2>
+    <p class="step-subtitle">Queremos saber quem está nos presenteando com esse feedback.</p>
+    <div class="req-note"><span>*</span> Campos obrigatórios</div>
+    <div class="field">
+      <label class="field-label" for="nome">Seu nome completo <span>*</span></label>
+      <input type="text" id="nome" placeholder="Ex: Maria Fernanda..." autocomplete="name" />
+      <div id="nomeError" style="font-size:12px;color:#C0392B;margin-top:6px;display:none;">Por favor, informe seu nome.</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-next" onclick="nextStep(0)">
+        Próximo
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── STEP 2: Nota ── -->
+  <div class="step" id="step1">
+    <p class="step-label">Etapa 2 de 4</p>
+    <h2 class="step-title">Qual nota você dá?</h2>
+    <p class="step-subtitle">De 0 a 10, o quanto você ficou satisfeito com o nosso bolo?</p>
+    <div class="field">
+      <div class="stars-container">
+        <div class="stars-row" id="starsRow"></div>
+        <div class="score-display" id="scoreDisplay">—</div>
+        <div class="score-label" id="scoreLabel">Selecione uma nota</div>
+      </div>
+      <div id="notaError" style="font-size:12px;color:#C0392B;margin-top:8px;display:none;">Por favor, selecione uma nota.</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="prevStep(1)">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4L3 8l4 4"/></svg>
+        Voltar
+      </button>
+      <button class="btn-next" onclick="nextStep(1)">
+        Próximo
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── STEP 3: Experiência ── -->
+  <div class="step" id="step2">
+    <p class="step-label">Etapa 3 de 4</p>
+    <h2 class="step-title">Conte-nos mais...</h2>
+    <p class="step-subtitle">Como foi a sua experiência ao saborear o nosso bolo? Detalhes são bem-vindos!</p>
+    <div class="field">
+      <label class="field-label" for="experiencia">Sua experiência</label>
+      <textarea id="experiencia" rows="5" placeholder="Ex: O bolo de cenoura estava incrível! Muito fofo, cobertura equilibrada e porção generosa..."></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="prevStep(2)">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4L3 8l4 4"/></svg>
+        Voltar
+      </button>
+      <button class="btn-next" onclick="nextStep(2)">
+        Próximo
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── STEP 4: Indicação ── -->
+  <div class="step" id="step3">
+    <p class="step-label">Etapa 4 de 4</p>
+    <h2 class="step-title">Você nos indicaria?</h2>
+    <p class="step-subtitle">Compartilhar coisa boa é o maior elogio que podemos receber.</p>
+    <div class="field">
+      <div class="radio-group" id="indicacaoGroup">
+        <label class="radio-option" data-value="Sim" onclick="selectRadio(this)">
+          <input type="radio" name="indicacao" value="Sim">
+          <div class="radio-dot"></div>
+          <span class="radio-icon">🤩</span>
+          <span class="radio-text">Sim, indicaria com entusiasmo!</span>
+        </label>
+        <label class="radio-option" data-value="Indicaria, mas com ressalvas" onclick="selectRadio(this)">
+          <input type="radio" name="indicacao" value="Indicaria, mas com ressalvas">
+          <div class="radio-dot"></div>
+          <span class="radio-icon">🤔</span>
+          <span class="radio-text">Indicaria, mas com algumas ressalvas</span>
+        </label>
+        <label class="radio-option" data-value="Indicaria depois de implementar mudanças" onclick="selectRadio(this)">
+          <input type="radio" name="indicacao" value="Indicaria depois de implementar mudanças">
+          <div class="radio-dot"></div>
+          <span class="radio-icon">🛠️</span>
+          <span class="radio-text">Indicaria depois de algumas melhorias</span>
+        </label>
+        <label class="radio-option" data-value="Não" onclick="selectRadio(this)">
+          <input type="radio" name="indicacao" value="Não">
+          <div class="radio-dot"></div>
+          <span class="radio-icon">😕</span>
+          <span class="radio-text">Não indicaria no momento</span>
+        </label>
+      </div>
+      <div id="indicacaoError" style="font-size:12px;color:#C0392B;margin-top:8px;display:none;">Por favor, selecione uma opção.</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="prevStep(3)">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4L3 8l4 4"/></svg>
+        Voltar
+      </button>
+      <button class="btn-next" id="submitBtn" onclick="submitForm()">
+        Enviar avaliação 🎂
+      </button>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="successScreen">
+    <div class="confetti-row">🎉 🍰 🎊</div>
+    <div class="success-icon">🎂</div>
+    <h2>Muito obrigado!</h2>
+    <p>Sua avaliação foi enviada com sucesso. Cada comentário é um ingrediente especial que nos ajuda a melhorar a receita.</p>
+    <div class="submitted-badge">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 8l4 4 8-8"/></svg>
+      Resposta registrada
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <p>🍰 <strong>La Patisserie</strong> — Feito com amor e manteiga de qualidade<br>
+  <a href="#">Política de Privacidade</a> · <a href="#">Fale Conosco</a></p>
+</footer>
+
+<script>
+  const FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSdrzWjYDmWl3fAK7mcMr4Ni_9ol9hv5Ve5mKEyG8rZiyLIY9Q/formResponse";
+  const FIELDS = {
+    nome: "entry.1687628342",
+    nota: "entry.440788284",
+    experiencia: "entry.58888179",
+    indicacao: "entry.1007921080"
+  };
+
+  let currentStep = 0;
+  let selectedScore = null;
+  let selectedIndicacao = null;
+  const scoreLabels = ["😞 Muito insatisfeito","😟 Insatisfeito","😕 Pouco satisfeito","😐 Regular","🙁 Abaixo do esperado","😊 Aceitável","🙂 Bom","😃 Muito bom","😁 Ótimo","🤩 Excelente","🥰 Perfeito!"];
+
+  function buildStars() {
+    const row = document.getElementById("starsRow");
+    for (let i = 0; i <= 10; i++) {
+      const btn = document.createElement("button");
+      btn.className = "star-btn";
+      btn.textContent = i;
+      btn.type = "button";
+      btn.setAttribute("aria-label", "Nota " + i);
+      btn.onclick = () => selectScore(i);
+      row.appendChild(btn);
+    }
+  }
+
+  function selectScore(n) {
+    selectedScore = n;
+    const btns = document.querySelectorAll(".star-btn");
+    btns.forEach((b, i) => b.classList.toggle("selected", i === n));
+    document.getElementById("scoreDisplay").textContent = n;
+    document.getElementById("scoreLabel").textContent = scoreLabels[n];
+    document.getElementById("notaError").style.display = "none";
+  }
+
+  function selectRadio(el) {
+    document.querySelectorAll(".radio-option").forEach(o => o.classList.remove("selected"));
+    el.classList.add("selected");
+    selectedIndicacao = el.dataset.value;
+    document.getElementById("indicacaoError").style.display = "none";
+  }
+
+  function updateProgress(step) {
+    for (let i = 0; i < 4; i++) {
+      const dot = document.getElementById("dot" + i);
+      dot.className = "progress-dot" + (i < step ? " done" : i === step ? " active" : "");
+    }
+  }
+
+  function nextStep(from) {
+    if (from === 0) {
+      const nome = document.getElementById("nome").value.trim();
+      if (!nome) { document.getElementById("nomeError").style.display = "block"; return; }
+      document.getElementById("nomeError").style.display = "none";
+    }
+    if (from === 1) {
+      if (selectedScore === null) { document.getElementById("notaError").style.display = "block"; return; }
+    }
+    if (from === 3) return;
+    document.getElementById("step" + from).classList.remove("visible");
+    currentStep = from + 1;
+    document.getElementById("step" + currentStep).classList.add("visible");
+    updateProgress(currentStep);
+  }
+
+  function prevStep(from) {
+    document.getElementById("step" + from).classList.remove("visible");
+    currentStep = from - 1;
+    document.getElementById("step" + currentStep).classList.add("visible");
+    updateProgress(currentStep);
+  }
+
+  function submitForm() {
+    if (!selectedIndicacao) { document.getElementById("indicacaoError").style.display = "block"; return; }
+
+    const params = new URLSearchParams();
+    params.append(FIELDS.nome, document.getElementById("nome").value.trim());
+    params.append(FIELDS.nota, selectedScore);
+    params.append(FIELDS.experiencia, document.getElementById("experiencia").value.trim());
+    params.append(FIELDS.indicacao, selectedIndicacao);
+
+    const img = new Image();
+    img.src = FORM_ACTION + "?" + params.toString();
+
+    document.getElementById("step3").classList.remove("visible");
+    document.getElementById("progressBar").style.display = "none";
+    document.getElementById("successScreen").classList.add("visible");
+  }
+
+  buildStars();
+</script>
+</body>
+</html>
